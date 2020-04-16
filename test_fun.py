@@ -75,6 +75,33 @@ def test_header(slater):
 """
 
 
+def test_slater_interface(slater):
+
+    assert slater.interface() == """
+/* INTERFACE PART */
+static integer slater_isgga(void) { return 0; }
+static integer slater_read(const char* conf_line);
+static real slater_energy(const FunDensProp* dp);
+static void slater_first(FunFirstFuncDrv *ds,   real fac, const FunDensProp*);
+static void slater_second(FunSecondFuncDrv *ds, real fac, const FunDensProp*);
+static void slater_third(FunThirdFuncDrv *ds,   real fac, const FunDensProp*);
+static void slater_fourth(FunFourthFuncDrv *ds, real fac, const FunDensProp*);
+
+Functional SlaterFunctional = {
+  "Slater",       /* name */
+  slater_isgga,   /* gga-corrected */
+   3,
+  slater_read, 
+  NULL,
+  slater_energy, 
+  slater_first,
+  slater_second,
+  slater_third,
+  slater_fourth
+};
+"""
+
+
 def test_slater_energy():
 
     PREF = -3/4*(6/pi)**(1/3)

@@ -69,6 +69,33 @@ class Functional:
             """
         )
 
+    def interface(self):
+        return textwrap.dedent(
+            f"""
+            /* INTERFACE PART */
+            static integer {self.name}_isgga(void) {{ return 0; }}
+            static integer {self.name}_read(const char* conf_line);
+            static real {self.name}_energy(const FunDensProp* dp);
+            static void {self.name}_first(FunFirstFuncDrv *ds,   real fac, const FunDensProp*);
+            static void {self.name}_second(FunSecondFuncDrv *ds, real fac, const FunDensProp*);
+            static void {self.name}_third(FunThirdFuncDrv *ds,   real fac, const FunDensProp*);
+            static void {self.name}_fourth(FunFourthFuncDrv *ds, real fac, const FunDensProp*);
+
+            Functional SlaterFunctional = {{
+              "Slater",       /* name */
+              {self.name}_isgga,   /* gga-corrected */
+               3,
+              {self.name}_read, 
+              NULL,
+              {self.name}_energy, 
+              {self.name}_first,
+              {self.name}_second,
+              {self.name}_third,
+              {self.name}_fourth
+            }};
+            """
+        )
+
     def energy(self):
         code = textwrap.dedent(
             f"""
