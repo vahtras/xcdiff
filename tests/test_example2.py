@@ -72,7 +72,7 @@ def test_example2_interface(example2):
 
     assert example2.interface() == """
 /* INTERFACE PART */
-static integer example2_isgga(void) { return 0; }
+static integer example2_isgga(void) { return 1; }
 static integer example2_read(const char* conf_line);
 static real example2_energy(const FunDensProp* dp);
 static void example2_first(FunFirstFuncDrv *ds,   real fac, const FunDensProp*);

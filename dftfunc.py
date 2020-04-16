@@ -15,6 +15,7 @@ class BaseFunctional:
         self.Fa = Fa
         self.Fb = Fb
         self.const = kwargs.get('const', '')
+        self.gga = 0
 
     def __str__(self):
         return (
@@ -85,7 +86,7 @@ class BaseFunctional:
         return textwrap.dedent(
             f"""
             /* INTERFACE PART */
-            static integer {self.name}_isgga(void) {{ return 0; }}
+            static integer {self.name}_isgga(void) {{ return {self.gga}; }}
             static integer {self.name}_read(const char* conf_line);
             static real {self.name}_energy(const FunDensProp* dp);
             static void {self.name}_first(FunFirstFuncDrv *ds,   real fac, const FunDensProp*);
@@ -242,6 +243,7 @@ class ExampleFunctional(Functional):
         self.Fa = Fa
         self.Fb = Fb
         self.const = kwargs.get('const', '')
+        self.gga = 1
 
     def energy(self):
         code = textwrap.dedent(
