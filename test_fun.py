@@ -102,6 +102,22 @@ Functional SlaterFunctional = {
 """
 
 
+def test_slater_read(slater):
+    assert slater.read() == """
+/* IMPLEMENTATION PART */
+static integer
+slater_read(const char* conf_line)
+{
+    fun_set_hf_weight(0);
+    return 1;
+}
+
+/* SLATER_THRESHOLD Only to avoid numerical problems due to raising 0
+ * to a fractional power. */
+static const real SLATER_THRESHOLD = 1e-20;
+"""
+
+
 def test_slater_energy():
 
     PREF = -3/4*(6/pi)**(1/3)

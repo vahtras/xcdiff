@@ -16,6 +16,18 @@ class Functional:
         self.Fb = Fb
         self.const = kwargs.get('const', '')
 
+    def __str__(self):
+        return (
+            self.header() +
+            self.interface() +
+            self.read() +
+            self.energy() +
+            self.gradient() +
+            self.hessian() +
+            self.third() +
+            self.fourth()
+        )
+
     def header(self):
         return textwrap.dedent(
             """
@@ -93,6 +105,23 @@ class Functional:
               {self.name}_third,
               {self.name}_fourth
             }};
+            """
+        )
+
+    def read(self):
+        return textwrap.dedent(
+            f"""
+            /* IMPLEMENTATION PART */
+            static integer
+            {self.name}_read(const char* conf_line)
+            {{
+                fun_set_hf_weight(0);
+                return 1;
+            }}
+
+            /* {self.name.upper()}_THRESHOLD Only to avoid numerical problems due to raising 0
+             * to a fractional power. */
+            static const real {self.name.upper()}_THRESHOLD = 1e-20;
             """
         )
 
