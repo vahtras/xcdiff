@@ -157,3 +157,33 @@ slater_second(FunSecondFuncDrv *ds, real factor, const FunDensProp* dp)
         PREF*(rb**(4/3)),
     )
     assert func.hessian() == reference
+
+
+def test_slater_third():
+    reference = f"""
+static void
+slater_third(FunThirdFuncDrv *ds, real factor, const FunDensProp* dp)
+{{
+  if (dp->rhoa>SLATER_THRESHOLD) {{
+     ds->df1000 += -1.8171205928321394*pow(M_PI, -0.33333333333333331)*pow(dp->rhoa, 0.33333333333333326)*factor;
+     ds->df2000 += -0.60570686427737963*pow(M_PI, -0.33333333333333331)*pow(dp->rhoa, -0.66666666666666674)*factor;
+     ds->df3000 += 0.40380457618491983*pow(M_PI, -0.33333333333333331)*pow(dp->rhoa, -1.6666666666666667)*factor;
+     }}
+  if (dp->rhob>SLATER_THRESHOLD) {{
+     ds->df0100 += -1.8171205928321394*pow(M_PI, -0.33333333333333331)*pow(dp->rhob, 0.33333333333333326)*factor;
+     ds->df0200 += -0.60570686427737963*pow(M_PI, -0.33333333333333331)*pow(dp->rhob, -0.66666666666666674)*factor;
+     ds->df0300 += 0.40380457618491983*pow(M_PI, -0.33333333333333331)*pow(dp->rhob, -1.6666666666666667)*factor;
+     }}
+}}
+"""
+
+    ra, rb = sympy.symbols('dp->rhoa, dp->rhob')
+    PREF = -3/4*(6/pi)**(1/3)
+    func = Functional(
+        'slater',
+        ra,
+        rb,
+        PREF*(ra**(4/3)),
+        PREF*(rb**(4/3)),
+    )
+    assert func.third() == reference
