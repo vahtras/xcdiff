@@ -118,9 +118,7 @@ static const real SLATER_THRESHOLD = 1e-20;
 """
 
 
-def test_slater_energy():
-
-    PREF = -3/4*(6/pi)**(1/3)
+def test_slater_energy(slater):
 
     reference = f"""
 static real
@@ -136,20 +134,10 @@ slater_energy(const FunDensProp* dp)
 }}
 """
 
-    ra, rb = sympy.symbols('dp->rhoa, dp->rhob')
-    # defs = "const real PREF= -3.0/4.0*pow(6/M_PI, 1.0/3.0);"
-    PREF = -3/4*(6/pi)**(1/3)
-    func = Functional(
-        'slater',
-        ra,
-        rb,
-        PREF*(ra**(4/3)),
-        PREF*(rb**(4/3)),
-    )
-    assert func.energy() == reference
+    assert slater.energy() == reference
 
 
-def test_slater_gradient():
+def test_slater_gradient(slater):
     reference = f"""
 static void
 slater_first(FunFirstFuncDrv *ds, real factor, const FunDensProp* dp)
@@ -161,19 +149,10 @@ slater_first(FunFirstFuncDrv *ds, real factor, const FunDensProp* dp)
 }}
 """
 
-    ra, rb = sympy.symbols('dp->rhoa, dp->rhob')
-    PREF = -3/4*(6/pi)**(1/3)
-    func = Functional(
-        'slater',
-        ra,
-        rb,
-        PREF*(ra**(4/3)),
-        PREF*(rb**(4/3)),
-    )
-    assert func.gradient() == reference
+    assert slater.gradient() == reference
 
 
-def test_slater_hessian():
+def test_slater_hessian(slater):
     reference = f"""
 static void
 slater_second(FunSecondFuncDrv *ds, real factor, const FunDensProp* dp)
@@ -189,19 +168,10 @@ slater_second(FunSecondFuncDrv *ds, real factor, const FunDensProp* dp)
 }}
 """
 
-    ra, rb = sympy.symbols('dp->rhoa, dp->rhob')
-    PREF = -3/4*(6/pi)**(1/3)
-    func = Functional(
-        'slater',
-        ra,
-        rb,
-        PREF*(ra**(4/3)),
-        PREF*(rb**(4/3)),
-    )
-    assert func.hessian() == reference
+    assert slater.hessian() == reference
 
 
-def test_slater_third():
+def test_slater_third(slater):
     reference = f"""
 static void
 slater_third(FunThirdFuncDrv *ds, real factor, const FunDensProp* dp)
@@ -219,19 +189,10 @@ slater_third(FunThirdFuncDrv *ds, real factor, const FunDensProp* dp)
 }}
 """
 
-    ra, rb = sympy.symbols('dp->rhoa, dp->rhob')
-    PREF = -3/4*(6/pi)**(1/3)
-    func = Functional(
-        'slater',
-        ra,
-        rb,
-        PREF*(ra**(4/3)),
-        PREF*(rb**(4/3)),
-    )
-    assert func.third() == reference
+    assert slater.third() == reference
 
 
-def test_slater_fourth():
+def test_slater_fourth(slater):
     reference = f"""
 static void
 slater_fourth(FunFourthFuncDrv *ds, real factor, const FunDensProp* dp)
@@ -251,13 +212,4 @@ slater_fourth(FunFourthFuncDrv *ds, real factor, const FunDensProp* dp)
 }}
 """
 
-    ra, rb = sympy.symbols('dp->rhoa, dp->rhob')
-    PREF = -3/4*(6/pi)**(1/3)
-    func = Functional(
-        'slater',
-        ra,
-        rb,
-        PREF*(ra**(4/3)),
-        PREF*(rb**(4/3)),
-    )
-    assert func.fourth() == reference
+    assert slater.fourth() == reference
