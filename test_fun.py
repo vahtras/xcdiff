@@ -75,7 +75,6 @@ def test_header(slater):
 """
 
 
-
 def test_slater_energy():
 
     PREF = -3/4*(6/pi)**(1/3)
@@ -85,7 +84,7 @@ static real
 slater_energy(const FunDensProp* dp)
 {{
   real ea = 0.0, eb = 0.0;
-  
+
   if (dp->rhoa >SLATER_THRESHOLD)
       ea = -1.3628404446241047*pow(M_PI, -0.33333333333333331)*pow(dp->rhoa, 1.3333333333333333);
   if (dp->rhob >SLATER_THRESHOLD)
