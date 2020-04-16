@@ -164,6 +164,7 @@ example2_third(FunThirdFuncDrv *ds, real factor, const FunDensProp* dp)
   ds->df0020 += EPREF*2*dp->rhoa*factor;
 
   ds->df1020 += EPREF*2*factor;
+  ds->df0030 += EPREF*0*factor;
 }}
 """
 
@@ -181,6 +182,7 @@ example2_fourth(FunFourthFuncDrv *ds, real factor, const FunDensProp* dp)
   ds->df0020 += EPREF*2*dp->rhoa*factor;
 
   ds->df1020 += EPREF*2*factor;
+  ds->df0030 += EPREF*0*factor;
 
   ds->df4000 += EPREF*0*factor;
   ds->df3010 += EPREF*0*factor;

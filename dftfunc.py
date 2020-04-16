@@ -298,6 +298,7 @@ class ExampleFunctional(Functional):
               ds->df0020 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga))}*factor;
 
               ds->df1020 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ra))}*factor;
+              ds->df0030 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ga))}*factor;
             }}
             """
         )
@@ -316,6 +317,7 @@ class ExampleFunctional(Functional):
               ds->df0020 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga))}*factor;
 
               ds->df1020 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ra))}*factor;
+              ds->df0030 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ga))}*factor;
 
               ds->df4000 += EPREF*{sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ra, self.ra))}*factor;
               ds->df3010 += EPREF*{sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ra, self.ga))}*factor;
