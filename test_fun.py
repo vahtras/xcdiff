@@ -134,14 +134,16 @@ slater_first(FunFirstFuncDrv *ds, real factor, const FunDensProp* dp)
 def test_slater_hessian():
     reference = f"""
 static void
-slater_second(FunFirstFuncDrv *ds, real factor, const FunDensProp* dp)
+slater_second(FunSecondFuncDrv *ds, real factor, const FunDensProp* dp)
 {{
-  if (dp->rhoa>SLATER_THRESHOLD)
+  if (dp->rhoa>SLATER_THRESHOLD) {{
      ds->df1000 += -1.8171205928321394*pow(M_PI, -0.33333333333333331)*pow(dp->rhoa, 0.33333333333333326)*factor;
      ds->df2000 += -0.60570686427737963*pow(M_PI, -0.33333333333333331)*pow(dp->rhoa, -0.66666666666666674)*factor;
-  if (dp->rhob>SLATER_THRESHOLD)
+     }}
+  if (dp->rhob>SLATER_THRESHOLD) {{
      ds->df0100 += -1.8171205928321394*pow(M_PI, -0.33333333333333331)*pow(dp->rhob, 0.33333333333333326)*factor;
      ds->df0200 += -0.60570686427737963*pow(M_PI, -0.33333333333333331)*pow(dp->rhob, -0.66666666666666674)*factor;
+     }}
 }}
 """
 

@@ -98,14 +98,16 @@ static void
     def hessian(self):
         code = f"""
 static void
-{self.name}_second(FunFirstFuncDrv *ds, real factor, const FunDensProp* dp)
+{self.name}_second(FunSecondFuncDrv *ds, real factor, const FunDensProp* dp)
 {{
-  if (dp->rhoa>{self.name.upper()}_THRESHOLD)
+  if (dp->rhoa>{self.name.upper()}_THRESHOLD) {{
      ds->df1000 += {sympy.ccode(self.Fa.diff(self.ra))}*factor;
      ds->df2000 += {sympy.ccode(self.Fa.diff(self.ra, self.ra))}*factor;
-  if (dp->rhob>{self.name.upper()}_THRESHOLD)
+     }}
+  if (dp->rhob>{self.name.upper()}_THRESHOLD) {{
      ds->df0100 += {sympy.ccode(self.Fb.diff(self.rb))}*factor;
      ds->df0200 += {sympy.ccode(self.Fb.diff(self.rb, self.rb))}*factor;
+     }}
 }}
 """
 
