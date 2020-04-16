@@ -4,7 +4,7 @@ import sympy
 from sympy import Symbol
 
 
-class Functional:
+class BaseFunctional:
     def __init__(
             self, name: str, ra: Symbol, rb: Symbol,
             Fa: Symbol, Fb: Symbol, **kwargs
@@ -93,8 +93,8 @@ class Functional:
             static void {self.name}_third(FunThirdFuncDrv *ds,   real fac, const FunDensProp*);
             static void {self.name}_fourth(FunFourthFuncDrv *ds, real fac, const FunDensProp*);
 
-            Functional SlaterFunctional = {{
-              "Slater",       /* name */
+            Functional {self.name.capitalize()}Functional = {{
+              "{self.name.capitalize()}",       /* name */
               {self.name}_isgga,   /* gga-corrected */
                3,
               {self.name}_read, 
@@ -124,6 +124,9 @@ class Functional:
             static const real {self.name.upper()}_THRESHOLD = 1e-20;
             """
         )
+
+
+class Functional(BaseFunctional):
 
     def energy(self):
         code = textwrap.dedent(
@@ -218,6 +221,105 @@ class Functional:
                  ds->df0300 += {sympy.ccode(self.Fb.diff(self.rb, self.rb, self.rb))}*factor;
                  ds->df0400 += {sympy.ccode(self.Fb.diff(self.rb, self.rb, self.rb, self.rb))}*factor;
                  }}
+            }}
+            """
+        )
+
+        return code
+
+
+class ExampleFunctional(Functional):
+
+    def __init__(
+            self, name: str, ra: Symbol, rb: Symbol, ga: Symbol, gb: Symbol,
+            Fa: Symbol, Fb: Symbol, **kwargs
+            ):
+        self.name = name
+        self.ra = ra
+        self.rb = rb
+        self.ga = ga
+        self.gb = gb
+        self.Fa = Fa
+        self.Fb = Fb
+        self.const = kwargs.get('const', '')
+
+    def energy(self):
+        code = textwrap.dedent(
+            f"""
+            {self.const}
+            static real
+            {self.name}_energy(const FunDensProp* dp)
+            {{
+              return EPREF*({sympy.ccode(self.Fa)}+{sympy.ccode(self.Fb)});
+            }}
+            """
+        )
+        return code
+
+    def gradient(self):
+        code = textwrap.dedent(
+            f"""
+            static void
+            {self.name}_first(FunFirstFuncDrv *ds, real factor, const FunDensProp* dp)
+            {{
+              ds->df1000 += EPREF*{sympy.ccode(self.Fa.diff(self.ra))}*factor;
+              ds->df0010 += EPREF*{sympy.ccode(self.Fa.diff(self.ga))}*factor;
+            }}
+            """
+        )
+        return code
+
+    def hessian(self):
+        code = textwrap.dedent(
+            f"""
+            static void
+            {self.name}_second(FunSecondFuncDrv *ds, real factor, const FunDensProp* dp)
+            {{
+              ds->df1000 += EPREF*{sympy.ccode(self.Fa.diff(self.ra))}*factor;
+              ds->df0010 += EPREF*{sympy.ccode(self.Fa.diff(self.ga))}*factor;
+              ds->df1010 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ra))}*factor;
+              ds->df0020 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga))}*factor;
+            }}
+            """
+        )
+        return code
+
+    def third(self):
+        code = textwrap.dedent(
+            f"""
+            static void
+            {self.name}_third(FunThirdFuncDrv *ds, real factor, const FunDensProp* dp)
+            {{
+              ds->df1000 += EPREF*{sympy.ccode(self.Fa.diff(self.ra))}*factor;
+              ds->df0010 += EPREF*{sympy.ccode(self.Fa.diff(self.ga))}*factor;
+              ds->df1010 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ra))}*factor;
+              ds->df0020 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga))}*factor;
+
+              ds->df1020 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ra))}*factor;
+            }}
+            """
+        )
+
+        return code
+
+    def fourth(self):
+        code = textwrap.dedent(
+            f"""
+            static void
+            {self.name}_fourth(FunFourthFuncDrv *ds, real factor, const FunDensProp* dp)
+            {{
+              ds->df1000 += EPREF*{sympy.ccode(self.Fa.diff(self.ra))}*factor;
+              ds->df0010 += EPREF*{sympy.ccode(self.Fa.diff(self.ga))}*factor;
+              ds->df1010 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ra))}*factor;
+              ds->df0020 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga))}*factor;
+
+              ds->df1020 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ra))}*factor;
+
+              ds->df4000 += EPREF*{sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ra, self.ra))}*factor;
+              ds->df3010 += EPREF*{sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ra, self.ga))}*factor;
+              ds->df2020 += EPREF*{sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ga, self.ga))}*factor;
+              ds->df1030 += EPREF*{sympy.ccode(self.Fa.diff(self.ra, self.ga, self.ga, self.ga))}*factor;
+              ds->df0040 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ga, self.ga))}*factor;
             }}
             """
         )
