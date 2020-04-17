@@ -130,8 +130,8 @@ def test_example3_gradient(example3):
 static void
 example3_first(FunFirstFuncDrv *ds, real factor, const FunDensProp* dp)
 {{
-  ds->df1000 += EPREF*0*factor;
-  ds->df0010 += EPREF*1.7*pow(dp->grada, 0.69999999999999996)*factor;
+  ds->df1000 += EPREF*(0)*factor;
+  ds->df0010 += EPREF*(1.7*pow(dp->grada, 0.69999999999999996))*factor;
 }}
 """
 
@@ -143,10 +143,10 @@ def test_example3_hessian(example3):
 static void
 example3_second(FunSecondFuncDrv *ds, real factor, const FunDensProp* dp)
 {{
-  ds->df1000 += EPREF*0*factor;
-  ds->df0010 += EPREF*1.7*pow(dp->grada, 0.69999999999999996)*factor;
-  ds->df1010 += EPREF*0*factor;
-  ds->df0020 += EPREF*1.1899999999999999*pow(dp->grada, -0.30000000000000004)*factor;
+  ds->df1000 += EPREF*(0)*factor;
+  ds->df0010 += EPREF*(1.7*pow(dp->grada, 0.69999999999999996))*factor;
+  ds->df1010 += EPREF*(0)*factor;
+  ds->df0020 += EPREF*(1.1899999999999999*pow(dp->grada, -0.30000000000000004))*factor;
 }}
 """
 
@@ -158,13 +158,13 @@ def test_example3_third(example3):
 static void
 example3_third(FunThirdFuncDrv *ds, real factor, const FunDensProp* dp)
 {{
-  ds->df1000 += EPREF*0*factor;
-  ds->df0010 += EPREF*1.7*pow(dp->grada, 0.69999999999999996)*factor;
-  ds->df1010 += EPREF*0*factor;
-  ds->df0020 += EPREF*1.1899999999999999*pow(dp->grada, -0.30000000000000004)*factor;
+  ds->df1000 += EPREF*(0)*factor;
+  ds->df0010 += EPREF*(1.7*pow(dp->grada, 0.69999999999999996))*factor;
+  ds->df1010 += EPREF*(0)*factor;
+  ds->df0020 += EPREF*(1.1899999999999999*pow(dp->grada, -0.30000000000000004))*factor;
 
-  ds->df1020 += EPREF*0*factor;
-  ds->df0030 += EPREF*-0.35700000000000004*pow(dp->grada, -1.3)*factor;
+  ds->df1020 += EPREF*(0)*factor;
+  ds->df0030 += EPREF*(-0.35700000000000004*pow(dp->grada, -1.3))*factor;
 }}
 """
 
@@ -176,19 +176,19 @@ def test_example3_fourth(example3):
 static void
 example3_fourth(FunFourthFuncDrv *ds, real factor, const FunDensProp* dp)
 {{
-  ds->df1000 += EPREF*0*factor;
-  ds->df0010 += EPREF*1.7*pow(dp->grada, 0.69999999999999996)*factor;
-  ds->df1010 += EPREF*0*factor;
-  ds->df0020 += EPREF*1.1899999999999999*pow(dp->grada, -0.30000000000000004)*factor;
+  ds->df1000 += EPREF*(0)*factor;
+  ds->df0010 += EPREF*(1.7*pow(dp->grada, 0.69999999999999996))*factor;
+  ds->df1010 += EPREF*(0)*factor;
+  ds->df0020 += EPREF*(1.1899999999999999*pow(dp->grada, -0.30000000000000004))*factor;
 
-  ds->df1020 += EPREF*0*factor;
-  ds->df0030 += EPREF*-0.35700000000000004*pow(dp->grada, -1.3)*factor;
+  ds->df1020 += EPREF*(0)*factor;
+  ds->df0030 += EPREF*(-0.35700000000000004*pow(dp->grada, -1.3))*factor;
 
-  ds->df4000 += EPREF*0*factor;
-  ds->df3010 += EPREF*0*factor;
-  ds->df2020 += EPREF*0*factor;
-  ds->df1030 += EPREF*0*factor;
-  ds->df0040 += EPREF*0.46410000000000007*pow(dp->grada, -2.2999999999999998)*factor;
+  ds->df4000 += EPREF*(0)*factor;
+  ds->df3010 += EPREF*(0)*factor;
+  ds->df2020 += EPREF*(0)*factor;
+  ds->df1030 += EPREF*(0)*factor;
+  ds->df0040 += EPREF*(0.46410000000000007*pow(dp->grada, -2.2999999999999998))*factor;
 }}
 """
 

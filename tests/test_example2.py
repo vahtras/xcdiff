@@ -188,8 +188,8 @@ def test_example2_gradient(example2):
 static void
 example2_first(FunFirstFuncDrv *ds, real factor, const FunDensProp* dp)
 {{
-  ds->df1000 += EPREF*pow(dp->grada, 2)*factor;
-  ds->df0010 += EPREF*2*dp->grada*dp->rhoa*factor;
+  ds->df1000 += EPREF*(pow(dp->grada, 2))*factor;
+  ds->df0010 += EPREF*(2*dp->grada*dp->rhoa)*factor;
 }}
 """
 
@@ -217,10 +217,10 @@ def test_example2_hessian(example2):
 static void
 example2_second(FunSecondFuncDrv *ds, real factor, const FunDensProp* dp)
 {{
-  ds->df1000 += EPREF*pow(dp->grada, 2)*factor;
-  ds->df0010 += EPREF*2*dp->grada*dp->rhoa*factor;
-  ds->df1010 += EPREF*2*dp->grada*factor;
-  ds->df0020 += EPREF*2*dp->rhoa*factor;
+  ds->df1000 += EPREF*(pow(dp->grada, 2))*factor;
+  ds->df0010 += EPREF*(2*dp->grada*dp->rhoa)*factor;
+  ds->df1010 += EPREF*(2*dp->grada)*factor;
+  ds->df0020 += EPREF*(2*dp->rhoa)*factor;
 }}
 """
 
@@ -256,13 +256,13 @@ def test_example2_third(example2):
 static void
 example2_third(FunThirdFuncDrv *ds, real factor, const FunDensProp* dp)
 {{
-  ds->df1000 += EPREF*pow(dp->grada, 2)*factor;
-  ds->df0010 += EPREF*2*dp->grada*dp->rhoa*factor;
-  ds->df1010 += EPREF*2*dp->grada*factor;
-  ds->df0020 += EPREF*2*dp->rhoa*factor;
+  ds->df1000 += EPREF*(pow(dp->grada, 2))*factor;
+  ds->df0010 += EPREF*(2*dp->grada*dp->rhoa)*factor;
+  ds->df1010 += EPREF*(2*dp->grada)*factor;
+  ds->df0020 += EPREF*(2*dp->rhoa)*factor;
 
-  ds->df1020 += EPREF*2*factor;
-  ds->df0030 += EPREF*0*factor;
+  ds->df1020 += EPREF*(2)*factor;
+  ds->df0030 += EPREF*(0)*factor;
 }}
 """
 
@@ -308,19 +308,19 @@ def test_example2_fourth(example2):
 static void
 example2_fourth(FunFourthFuncDrv *ds, real factor, const FunDensProp* dp)
 {{
-  ds->df1000 += EPREF*pow(dp->grada, 2)*factor;
-  ds->df0010 += EPREF*2*dp->grada*dp->rhoa*factor;
-  ds->df1010 += EPREF*2*dp->grada*factor;
-  ds->df0020 += EPREF*2*dp->rhoa*factor;
+  ds->df1000 += EPREF*(pow(dp->grada, 2))*factor;
+  ds->df0010 += EPREF*(2*dp->grada*dp->rhoa)*factor;
+  ds->df1010 += EPREF*(2*dp->grada)*factor;
+  ds->df0020 += EPREF*(2*dp->rhoa)*factor;
 
-  ds->df1020 += EPREF*2*factor;
-  ds->df0030 += EPREF*0*factor;
+  ds->df1020 += EPREF*(2)*factor;
+  ds->df0030 += EPREF*(0)*factor;
 
-  ds->df4000 += EPREF*0*factor;
-  ds->df3010 += EPREF*0*factor;
-  ds->df2020 += EPREF*0*factor;
-  ds->df1030 += EPREF*0*factor;
-  ds->df0040 += EPREF*0*factor;
+  ds->df4000 += EPREF*(0)*factor;
+  ds->df3010 += EPREF*(0)*factor;
+  ds->df2020 += EPREF*(0)*factor;
+  ds->df1030 += EPREF*(0)*factor;
+  ds->df0040 += EPREF*(0)*factor;
 }}
 """
 

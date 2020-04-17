@@ -155,9 +155,9 @@ class Functional(BaseFunctional):
             {self.name}_first(FunFirstFuncDrv *ds, real factor, const FunDensProp* dp)
             {{
               if (dp->rhoa>{self.name.upper()}_THRESHOLD)
-                 ds->df1000 += {sympy.ccode(self.Fa.diff(self.ra))}*factor;
+                 ds->df1000 += ({sympy.ccode(self.Fa.diff(self.ra))})*factor;
               if (dp->rhob>{self.name.upper()}_THRESHOLD)
-                 ds->df0100 += {sympy.ccode(self.Fb.diff(self.rb))}*factor;
+                 ds->df0100 += ({sympy.ccode(self.Fb.diff(self.rb))})*factor;
             }}
             """
         )
@@ -171,12 +171,12 @@ class Functional(BaseFunctional):
             {self.name}_second(FunSecondFuncDrv *ds, real factor, const FunDensProp* dp)
             {{
               if (dp->rhoa>{self.name.upper()}_THRESHOLD) {{
-                 ds->df1000 += {sympy.ccode(self.Fa.diff(self.ra))}*factor;
-                 ds->df2000 += {sympy.ccode(self.Fa.diff(self.ra, self.ra))}*factor;
+                 ds->df1000 += ({sympy.ccode(self.Fa.diff(self.ra))})*factor;
+                 ds->df2000 += ({sympy.ccode(self.Fa.diff(self.ra, self.ra))})*factor;
                  }}
               if (dp->rhob>{self.name.upper()}_THRESHOLD) {{
-                 ds->df0100 += {sympy.ccode(self.Fb.diff(self.rb))}*factor;
-                 ds->df0200 += {sympy.ccode(self.Fb.diff(self.rb, self.rb))}*factor;
+                 ds->df0100 += ({sympy.ccode(self.Fb.diff(self.rb))})*factor;
+                 ds->df0200 += ({sympy.ccode(self.Fb.diff(self.rb, self.rb))})*factor;
                  }}
             }}
             """
@@ -190,14 +190,14 @@ class Functional(BaseFunctional):
             {self.name}_third(FunThirdFuncDrv *ds, real factor, const FunDensProp* dp)
             {{
               if (dp->rhoa>{self.name.upper()}_THRESHOLD) {{
-                 ds->df1000 += {sympy.ccode(self.Fa.diff(self.ra))}*factor;
-                 ds->df2000 += {sympy.ccode(self.Fa.diff(self.ra, self.ra))}*factor;
-                 ds->df3000 += {sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ra))}*factor;
+                 ds->df1000 += ({sympy.ccode(self.Fa.diff(self.ra))})*factor;
+                 ds->df2000 += ({sympy.ccode(self.Fa.diff(self.ra, self.ra))})*factor;
+                 ds->df3000 += ({sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ra))})*factor;
                  }}
               if (dp->rhob>{self.name.upper()}_THRESHOLD) {{
-                 ds->df0100 += {sympy.ccode(self.Fb.diff(self.rb))}*factor;
-                 ds->df0200 += {sympy.ccode(self.Fb.diff(self.rb, self.rb))}*factor;
-                 ds->df0300 += {sympy.ccode(self.Fb.diff(self.rb, self.rb, self.rb))}*factor;
+                 ds->df0100 += ({sympy.ccode(self.Fb.diff(self.rb))})*factor;
+                 ds->df0200 += ({sympy.ccode(self.Fb.diff(self.rb, self.rb))})*factor;
+                 ds->df0300 += ({sympy.ccode(self.Fb.diff(self.rb, self.rb, self.rb))})*factor;
                  }}
             }}
             """
@@ -212,16 +212,16 @@ class Functional(BaseFunctional):
             {self.name}_fourth(FunFourthFuncDrv *ds, real factor, const FunDensProp* dp)
             {{
               if (dp->rhoa>{self.name.upper()}_THRESHOLD) {{
-                 ds->df1000 += {sympy.ccode(self.Fa.diff(self.ra))}*factor;
-                 ds->df2000 += {sympy.ccode(self.Fa.diff(self.ra, self.ra))}*factor;
-                 ds->df3000 += {sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ra))}*factor;
-                 ds->df4000 += {sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ra, self.ra))}*factor;
+                 ds->df1000 += ({sympy.ccode(self.Fa.diff(self.ra))})*factor;
+                 ds->df2000 += ({sympy.ccode(self.Fa.diff(self.ra, self.ra))})*factor;
+                 ds->df3000 += ({sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ra))})*factor;
+                 ds->df4000 += ({sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ra, self.ra))})*factor;
                  }}
               if (dp->rhob>{self.name.upper()}_THRESHOLD) {{
-                 ds->df0100 += {sympy.ccode(self.Fb.diff(self.rb))}*factor;
-                 ds->df0200 += {sympy.ccode(self.Fb.diff(self.rb, self.rb))}*factor;
-                 ds->df0300 += {sympy.ccode(self.Fb.diff(self.rb, self.rb, self.rb))}*factor;
-                 ds->df0400 += {sympy.ccode(self.Fb.diff(self.rb, self.rb, self.rb, self.rb))}*factor;
+                 ds->df0100 += ({sympy.ccode(self.Fb.diff(self.rb))})*factor;
+                 ds->df0200 += ({sympy.ccode(self.Fb.diff(self.rb, self.rb))})*factor;
+                 ds->df0300 += ({sympy.ccode(self.Fb.diff(self.rb, self.rb, self.rb))})*factor;
+                 ds->df0400 += ({sympy.ccode(self.Fb.diff(self.rb, self.rb, self.rb, self.rb))})*factor;
                  }}
             }}
             """
@@ -266,8 +266,8 @@ class ExampleFunctional(Functional):
             static void
             {self.name}_first(FunFirstFuncDrv *ds, real factor, const FunDensProp* dp)
             {{
-              ds->df1000 += EPREF*{sympy.ccode(self.Fa.diff(self.ra))}*factor;
-              ds->df0010 += EPREF*{sympy.ccode(self.Fa.diff(self.ga))}*factor;
+              ds->df1000 += EPREF*({sympy.ccode(self.Fa.diff(self.ra))})*factor;
+              ds->df0010 += EPREF*({sympy.ccode(self.Fa.diff(self.ga))})*factor;
             }}
             """
         )
@@ -279,10 +279,10 @@ class ExampleFunctional(Functional):
             static void
             {self.name}_second(FunSecondFuncDrv *ds, real factor, const FunDensProp* dp)
             {{
-              ds->df1000 += EPREF*{sympy.ccode(self.Fa.diff(self.ra))}*factor;
-              ds->df0010 += EPREF*{sympy.ccode(self.Fa.diff(self.ga))}*factor;
-              ds->df1010 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ra))}*factor;
-              ds->df0020 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga))}*factor;
+              ds->df1000 += EPREF*({sympy.ccode(self.Fa.diff(self.ra))})*factor;
+              ds->df0010 += EPREF*({sympy.ccode(self.Fa.diff(self.ga))})*factor;
+              ds->df1010 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ra))})*factor;
+              ds->df0020 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ga))})*factor;
             }}
             """
         )
@@ -294,13 +294,13 @@ class ExampleFunctional(Functional):
             static void
             {self.name}_third(FunThirdFuncDrv *ds, real factor, const FunDensProp* dp)
             {{
-              ds->df1000 += EPREF*{sympy.ccode(self.Fa.diff(self.ra))}*factor;
-              ds->df0010 += EPREF*{sympy.ccode(self.Fa.diff(self.ga))}*factor;
-              ds->df1010 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ra))}*factor;
-              ds->df0020 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga))}*factor;
+              ds->df1000 += EPREF*({sympy.ccode(self.Fa.diff(self.ra))})*factor;
+              ds->df0010 += EPREF*({sympy.ccode(self.Fa.diff(self.ga))})*factor;
+              ds->df1010 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ra))})*factor;
+              ds->df0020 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ga))})*factor;
 
-              ds->df1020 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ra))}*factor;
-              ds->df0030 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ga))}*factor;
+              ds->df1020 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ra))})*factor;
+              ds->df0030 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ga))})*factor;
             }}
             """
         )
@@ -313,19 +313,19 @@ class ExampleFunctional(Functional):
             static void
             {self.name}_fourth(FunFourthFuncDrv *ds, real factor, const FunDensProp* dp)
             {{
-              ds->df1000 += EPREF*{sympy.ccode(self.Fa.diff(self.ra))}*factor;
-              ds->df0010 += EPREF*{sympy.ccode(self.Fa.diff(self.ga))}*factor;
-              ds->df1010 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ra))}*factor;
-              ds->df0020 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga))}*factor;
+              ds->df1000 += EPREF*({sympy.ccode(self.Fa.diff(self.ra))})*factor;
+              ds->df0010 += EPREF*({sympy.ccode(self.Fa.diff(self.ga))})*factor;
+              ds->df1010 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ra))})*factor;
+              ds->df0020 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ga))})*factor;
 
-              ds->df1020 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ra))}*factor;
-              ds->df0030 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ga))}*factor;
+              ds->df1020 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ra))})*factor;
+              ds->df0030 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ga))})*factor;
 
-              ds->df4000 += EPREF*{sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ra, self.ra))}*factor;
-              ds->df3010 += EPREF*{sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ra, self.ga))}*factor;
-              ds->df2020 += EPREF*{sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ga, self.ga))}*factor;
-              ds->df1030 += EPREF*{sympy.ccode(self.Fa.diff(self.ra, self.ga, self.ga, self.ga))}*factor;
-              ds->df0040 += EPREF*{sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ga, self.ga))}*factor;
+              ds->df4000 += EPREF*({sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ra, self.ra))})*factor;
+              ds->df3010 += EPREF*({sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ra, self.ga))})*factor;
+              ds->df2020 += EPREF*({sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ga, self.ga))})*factor;
+              ds->df1030 += EPREF*({sympy.ccode(self.Fa.diff(self.ra, self.ga, self.ga, self.ga))})*factor;
+              ds->df0040 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ga, self.ga))})*factor;
             }}
             """
         )
