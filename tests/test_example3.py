@@ -12,7 +12,7 @@ pi = sympy.pi
 def example3():
     ra, rb, ga, gb = sympy.symbols('dp->rhoa, dp->rhob, dp->grada, dp->gradb')
     func = ExampleFunctional(
-        'example3',
+        'Example3',
         ra,
         rb,
         ga,

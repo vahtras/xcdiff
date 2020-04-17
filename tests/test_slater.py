@@ -14,7 +14,7 @@ def slater():
     # defs = "const real PREF= -3.0/4.0*pow(6/M_PI, 1.0/3.0);"
     PREF = -3/4*(6/pi)**(1/3)
     func = Functional(
-        'slater',
+        'Slater',
         ra,
         rb,
         PREF*(ra**(4/3)),
