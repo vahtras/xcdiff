@@ -96,7 +96,7 @@ class BaseFunctional:
             static void {self.name}_fourth(FunFourthFuncDrv *ds, real fac, const FunDensProp*);
 
             Functional {self.name_orig}Functional = {{
-              "{self.name.capitalize()}",       /* name */
+              "{self.name_orig}",       /* name */
               {self.name}_isgga,   /* gga-corrected */
                3,
               {self.name}_read, 
