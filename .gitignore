@@ -4,3 +4,4 @@
 dft
 .vscode
 dist
+*egg-info
