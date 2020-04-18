@@ -2,7 +2,7 @@ import sympy
 
 import pytest
 
-from dftfunc import Functional
+from xcd import Functional
 
 
 pi = sympy.pi
