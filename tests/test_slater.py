@@ -45,7 +45,7 @@ def test_header(slater):
 
 */
 /*-*-mode: C; c-indentation-style: "bsd"; c-basic-offset: 4; -*-*/
-/* fun-Slater.c:
+/* fun-slater.c:
    implementation of Slater functional and its derivatives
    (c), Pawel Salek, pawsa@theochem.kth.se, aug 2001
    Z. Rinkevicius adapted for open shell systems: energy, first derivatives.

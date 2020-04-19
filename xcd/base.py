@@ -31,7 +31,7 @@ class BaseFunctional:
 
     def header(self):
         return textwrap.dedent(
-            """
+            f"""
             /*
 
 
@@ -56,8 +56,8 @@ class BaseFunctional:
 
             */
             /*-*-mode: C; c-indentation-style: "bsd"; c-basic-offset: 4; -*-*/
-            /* fun-Slater.c:
-               implementation of Slater functional and its derivatives
+            /* fun-{self.name}.c:
+               implementation of {self.name_orig} functional and its derivatives
                (c), Pawel Salek, pawsa@theochem.kth.se, aug 2001
                Z. Rinkevicius adapted for open shell systems: energy, first derivatives.
                NOTE:
