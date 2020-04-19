@@ -10,21 +10,17 @@ pi = sympy.pi
 
 @pytest.fixture
 def slater():
-    ra, rb = sympy.symbols('dp->rhoa, dp->rhob')
+    ra, rb = sympy.symbols("dp->rhoa, dp->rhob")
     # defs = "const real PREF= -3.0/4.0*pow(6/M_PI, 1.0/3.0);"
-    PREF = -3/4*(6/pi)**(1/3)
-    func = Functional(
-        'Slater',
-        ra,
-        rb,
-        PREF*(ra**(4/3)),
-        PREF*(rb**(4/3)),
-    )
+    PREF = -3 / 4 * (6 / pi) ** (1 / 3)
+    func = Functional("Slater", ra, rb, PREF * (ra ** (4 / 3)), PREF * (rb ** (4 / 3)),)
     return func
 
 
 def test_header(slater):
-    assert slater.header() == """
+    assert (
+        slater.header()
+        == """
 /*
 
 
@@ -50,7 +46,7 @@ def test_header(slater):
 */
 /*-*-mode: C; c-indentation-style: "bsd"; c-basic-offset: 4; -*-*/
 /* fun-Slater.c:
-   implementation of Slater functional and its derivatives 
+   implementation of Slater functional and its derivatives
    (c), Pawel Salek, pawsa@theochem.kth.se, aug 2001
    Z. Rinkevicius adapted for open shell systems: energy, first derivatives.
    NOTE:
@@ -73,11 +69,14 @@ def test_header(slater):
 
 #include "functionals.h"
 """
+    )
 
 
 def test_slater_interface(slater):
 
-    assert slater.interface() == """
+    assert (
+        slater.interface()
+        == """
 /* INTERFACE PART */
 static integer slater_isgga(void) { return 0; }
 static integer slater_read(const char* conf_line);
@@ -91,19 +90,22 @@ Functional SlaterFunctional = {
   "Slater",       /* name */
   slater_isgga,   /* gga-corrected */
    3,
-  slater_read, 
+  slater_read,
   NULL,
-  slater_energy, 
+  slater_energy,
   slater_first,
   slater_second,
   slater_third,
   slater_fourth
 };
 """
+    )
 
 
 def test_slater_read(slater):
-    assert slater.read() == """
+    assert (
+        slater.read()
+        == """
 /* IMPLEMENTATION PART */
 static integer
 slater_read(const char* conf_line)
@@ -116,6 +118,7 @@ slater_read(const char* conf_line)
  * to a fractional power. */
 static const real SLATER_THRESHOLD = 1e-20;
 """
+    )
 
 
 def test_slater_energy(slater):

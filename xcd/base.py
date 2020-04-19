@@ -57,7 +57,7 @@ class BaseFunctional:
             */
             /*-*-mode: C; c-indentation-style: "bsd"; c-basic-offset: 4; -*-*/
             /* fun-Slater.c:
-               implementation of Slater functional and its derivatives 
+               implementation of Slater functional and its derivatives
                (c), Pawel Salek, pawsa@theochem.kth.se, aug 2001
                Z. Rinkevicius adapted for open shell systems: energy, first derivatives.
                NOTE:
@@ -98,9 +98,9 @@ class BaseFunctional:
               "{self.name_orig}",       /* name */
               {self.name}_isgga,   /* gga-corrected */
                3,
-              {self.name}_read, 
+              {self.name}_read,
               NULL,
-              {self.name}_energy, 
+              {self.name}_energy,
               {self.name}_first,
               {self.name}_second,
               {self.name}_third,

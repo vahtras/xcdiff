@@ -1,7 +1,6 @@
 import textwrap
 
-from sympy import Symbol
-import sympy
+from sympy import Symbol, ccode
 
 from .func import Functional
 
@@ -30,7 +29,7 @@ class ExampleFunctional(Functional):
             static real
             {self.name}_energy(const FunDensProp* dp)
             {{
-              return EPREF*({sympy.ccode(self.Fa)}+{sympy.ccode(self.Fb)});
+              return EPREF*({ccode(self.Fa)}+{ccode(self.Fb)});
             }}
             """
         )
@@ -42,8 +41,8 @@ class ExampleFunctional(Functional):
             static void
             {self.name}_first(FunFirstFuncDrv *ds, real factor, const FunDensProp* dp)
             {{
-              ds->df1000 += EPREF*({sympy.ccode(self.Fa.diff(self.ra))})*factor;
-              ds->df0010 += EPREF*({sympy.ccode(self.Fa.diff(self.ga))})*factor;
+              ds->df1000 += EPREF*({ccode(self.Fa.diff(self.ra))})*factor;
+              ds->df0010 += EPREF*({ccode(self.Fa.diff(self.ga))})*factor;
             }}
             """
         )
@@ -55,10 +54,10 @@ class ExampleFunctional(Functional):
             static void
             {self.name}_second(FunSecondFuncDrv *ds, real factor, const FunDensProp* dp)
             {{
-              ds->df1000 += EPREF*({sympy.ccode(self.Fa.diff(self.ra))})*factor;
-              ds->df0010 += EPREF*({sympy.ccode(self.Fa.diff(self.ga))})*factor;
-              ds->df1010 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ra))})*factor;
-              ds->df0020 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ga))})*factor;
+              ds->df1000 += EPREF*({ccode(self.Fa.diff(self.ra))})*factor;
+              ds->df0010 += EPREF*({ccode(self.Fa.diff(self.ga))})*factor;
+              ds->df1010 += EPREF*({ccode(self.Fa.diff(self.ga, self.ra))})*factor;
+              ds->df0020 += EPREF*({ccode(self.Fa.diff(self.ga, self.ga))})*factor;
             }}
             """
         )
@@ -70,13 +69,13 @@ class ExampleFunctional(Functional):
             static void
             {self.name}_third(FunThirdFuncDrv *ds, real factor, const FunDensProp* dp)
             {{
-              ds->df1000 += EPREF*({sympy.ccode(self.Fa.diff(self.ra))})*factor;
-              ds->df0010 += EPREF*({sympy.ccode(self.Fa.diff(self.ga))})*factor;
-              ds->df1010 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ra))})*factor;
-              ds->df0020 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ga))})*factor;
+              ds->df1000 += EPREF*({ccode(self.Fa.diff(self.ra))})*factor;
+              ds->df0010 += EPREF*({ccode(self.Fa.diff(self.ga))})*factor;
+              ds->df1010 += EPREF*({ccode(self.Fa.diff(self.ga, self.ra))})*factor;
+              ds->df0020 += EPREF*({ccode(self.Fa.diff(self.ga, self.ga))})*factor;
 
-              ds->df1020 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ra))})*factor;
-              ds->df0030 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ga))})*factor;
+              ds->df1020 += EPREF*({ccode(self.Fa.diff(self.ga, self.ga, self.ra))})*factor;
+              ds->df0030 += EPREF*({ccode(self.Fa.diff(self.ga, self.ga, self.ga))})*factor;
             }}
             """
         )
@@ -89,19 +88,19 @@ class ExampleFunctional(Functional):
             static void
             {self.name}_fourth(FunFourthFuncDrv *ds, real factor, const FunDensProp* dp)
             {{
-              ds->df1000 += EPREF*({sympy.ccode(self.Fa.diff(self.ra))})*factor;
-              ds->df0010 += EPREF*({sympy.ccode(self.Fa.diff(self.ga))})*factor;
-              ds->df1010 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ra))})*factor;
-              ds->df0020 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ga))})*factor;
+              ds->df1000 += EPREF*({ccode(self.Fa.diff(self.ra))})*factor;
+              ds->df0010 += EPREF*({ccode(self.Fa.diff(self.ga))})*factor;
+              ds->df1010 += EPREF*({ccode(self.Fa.diff(self.ga, self.ra))})*factor;
+              ds->df0020 += EPREF*({ccode(self.Fa.diff(self.ga, self.ga))})*factor;
 
-              ds->df1020 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ra))})*factor;
-              ds->df0030 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ga))})*factor;
+              ds->df1020 += EPREF*({ccode(self.Fa.diff(self.ga, self.ga, self.ra))})*factor;
+              ds->df0030 += EPREF*({ccode(self.Fa.diff(self.ga, self.ga, self.ga))})*factor;
 
-              ds->df4000 += EPREF*({sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ra, self.ra))})*factor;
-              ds->df3010 += EPREF*({sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ra, self.ga))})*factor;
-              ds->df2020 += EPREF*({sympy.ccode(self.Fa.diff(self.ra, self.ra, self.ga, self.ga))})*factor;
-              ds->df1030 += EPREF*({sympy.ccode(self.Fa.diff(self.ra, self.ga, self.ga, self.ga))})*factor;
-              ds->df0040 += EPREF*({sympy.ccode(self.Fa.diff(self.ga, self.ga, self.ga, self.ga))})*factor;
+              ds->df4000 += EPREF*({ccode(self.Fa.diff(self.ra, self.ra, self.ra, self.ra))})*factor;
+              ds->df3010 += EPREF*({ccode(self.Fa.diff(self.ra, self.ra, self.ra, self.ga))})*factor;
+              ds->df2020 += EPREF*({ccode(self.Fa.diff(self.ra, self.ra, self.ga, self.ga))})*factor;
+              ds->df1030 += EPREF*({ccode(self.Fa.diff(self.ra, self.ga, self.ga, self.ga))})*factor;
+              ds->df0040 += EPREF*({ccode(self.Fa.diff(self.ga, self.ga, self.ga, self.ga))})*factor;
             }}
             """
         )

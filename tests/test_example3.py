@@ -10,23 +10,25 @@ pi = sympy.pi
 
 @pytest.fixture
 def example3():
-    ra, rb, ga, gb = sympy.symbols('dp->rhoa, dp->rhob, dp->grada, dp->gradb')
+    ra, rb, ga, gb = sympy.symbols("dp->rhoa, dp->rhob, dp->grada, dp->gradb")
     func = ExampleFunctional(
-        'Example3',
+        "Example3",
         ra,
         rb,
         ga,
         gb,
         pow(ga, 1.7),
         pow(gb, 1.7),
-        const='static const real EPREF= -5e-2;'
+        const="static const real EPREF= -5e-2;",
     )
     return func
 
 
 @pytest.mark.skip
 def test_header(example3):
-    assert example3.header() == """
+    assert (
+        example3.header()
+        == """
 /*
 
 
@@ -66,11 +68,14 @@ def test_header(example3):
 
 #include "functionals.h"
 """
+    )
 
 
 def test_example3_interface(example3):
 
-    assert example3.interface() == """
+    assert (
+        example3.interface()
+        == """
 /* INTERFACE PART */
 static integer example3_isgga(void) { return 1; }
 static integer example3_read(const char* conf_line);
@@ -84,19 +89,22 @@ Functional Example3Functional = {
   "Example3",       /* name */
   example3_isgga,   /* gga-corrected */
    3,
-  example3_read, 
+  example3_read,
   NULL,
-  example3_energy, 
+  example3_energy,
   example3_first,
   example3_second,
   example3_third,
   example3_fourth
 };
 """
+    )
 
 
 def test_example3_read(example3):
-    assert example3.read() == """
+    assert (
+        example3.read()
+        == """
 /* IMPLEMENTATION PART */
 static integer
 example3_read(const char* conf_line)
@@ -109,6 +117,7 @@ example3_read(const char* conf_line)
  * to a fractional power. */
 static const real EXAMPLE3_THRESHOLD = 1e-20;
 """
+    )
 
 
 def test_example3_energy(example3):

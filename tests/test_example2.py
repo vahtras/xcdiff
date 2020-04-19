@@ -10,38 +10,32 @@ pi = sympy.pi
 
 @pytest.fixture
 def example2():
-    ra, rb, ga, gb = sympy.symbols('dp->rhoa, dp->rhob, dp->grada, dp->gradb')
+    ra, rb, ga, gb = sympy.symbols("dp->rhoa, dp->rhob, dp->grada, dp->gradb")
     func = ExampleFunctional(
-        'Example2',
+        "Example2",
         ra,
         rb,
         ga,
         gb,
-        ra*ga*ga,
-        rb*gb*gb,
-        const='static const real EPREF= -5e-5;'
+        ra * ga * ga,
+        rb * gb * gb,
+        const="static const real EPREF= -5e-5;",
     )
     return func
 
 
 @pytest.fixture
 def gga2():
-    ra, rb, ga, gb = sympy.symbols('dp->rhoa, dp->rhob, dp->grada, dp->gradb')
-    func = GGAFunctional(
-        'Example2',
-        ra,
-        rb,
-        ga,
-        gb,
-        ra*ga*ga,
-        rb*gb*gb,
-    )
+    ra, rb, ga, gb = sympy.symbols("dp->rhoa, dp->rhob, dp->grada, dp->gradb")
+    func = GGAFunctional("Example2", ra, rb, ga, gb, ra * ga * ga, rb * gb * gb,)
     return func
 
 
 @pytest.mark.skip
 def test_header(example2):
-    assert example2.header() == """
+    assert (
+        example2.header()
+        == """
 /*
 
 
@@ -81,11 +75,14 @@ def test_header(example2):
 
 #include "functionals.h"
 """
+    )
 
 
 def test_example2_interface(example2):
 
-    assert example2.interface() == """
+    assert (
+        example2.interface()
+        == """
 /* INTERFACE PART */
 static integer example2_isgga(void) { return 1; }
 static integer example2_read(const char* conf_line);
@@ -99,20 +96,23 @@ Functional Example2Functional = {
   "Example2",       /* name */
   example2_isgga,   /* gga-corrected */
    3,
-  example2_read, 
+  example2_read,
   NULL,
-  example2_energy, 
+  example2_energy,
   example2_first,
   example2_second,
   example2_third,
   example2_fourth
 };
 """
+    )
 
 
 def test_gga2_interface(gga2):
 
-    assert gga2.interface() == """
+    assert (
+        gga2.interface()
+        == """
 /* INTERFACE PART */
 static integer example2_isgga(void) { return 1; }
 static integer example2_read(const char* conf_line);
@@ -126,19 +126,22 @@ Functional Example2Functional = {
   "Example2",       /* name */
   example2_isgga,   /* gga-corrected */
    3,
-  example2_read, 
+  example2_read,
   NULL,
-  example2_energy, 
+  example2_energy,
   example2_first,
   example2_second,
   example2_third,
   example2_fourth
 };
 """
+    )
 
 
 def test_example2_read(example2):
-    assert example2.read() == """
+    assert (
+        example2.read()
+        == """
 /* IMPLEMENTATION PART */
 static integer
 example2_read(const char* conf_line)
@@ -151,10 +154,13 @@ example2_read(const char* conf_line)
  * to a fractional power. */
 static const real EXAMPLE2_THRESHOLD = 1e-20;
 """
+    )
 
 
 def test_gga2_read(example2):
-    assert example2.read() == """
+    assert (
+        example2.read()
+        == """
 /* IMPLEMENTATION PART */
 static integer
 example2_read(const char* conf_line)
@@ -167,6 +173,7 @@ example2_read(const char* conf_line)
  * to a fractional power. */
 static const real EXAMPLE2_THRESHOLD = 1e-20;
 """
+    )
 
 
 def test_example2_energy(gga2):
