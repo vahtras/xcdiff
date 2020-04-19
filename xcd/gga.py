@@ -11,15 +11,9 @@ class GGAFunctional(Functional):
             self, name: str, ra: Symbol, rb: Symbol, ga: Symbol, gb: Symbol,
             Fa: Symbol, Fb: Symbol, **kwargs
             ):
-        self.name_orig = name
-        self.name = name.lower()
-        self.ra = ra
-        self.rb = rb
+        super().__init__(name, ra, rb, Fa, Fb, **kwargs)
         self.ga = ga
         self.gb = gb
-        self.Fa = Fa
-        self.Fb = Fb
-        self.const = kwargs.get('const', '')
         self.gga = 1
 
     def energy(self):
