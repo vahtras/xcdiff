@@ -15,6 +15,7 @@ class BaseFunctional:
         self.Fa = Fa
         self.Fb = Fb
         self.const = kwargs.get('const', '')
+        self.threshold = kwargs.get('threshold')
         self.gga = 0
 
     def __str__(self):
@@ -37,7 +38,7 @@ class BaseFunctional:
 
             !
             !  Dalton, a molecular electronic structure program
-            !  Copyright (C) 2018 by the authors of Dalton.
+            !  Copyright (C) 2020 by the authors of Dalton.
             !
             !  This program is free software; you can redistribute it and/or
             !  modify it under the terms of the GNU Lesser General Public
@@ -110,7 +111,7 @@ class BaseFunctional:
         )
 
     def read(self):
-        return textwrap.dedent(
+        retstr =  textwrap.dedent(
             f"""
             /* IMPLEMENTATION PART */
             static integer
@@ -119,9 +120,14 @@ class BaseFunctional:
                 fun_set_hf_weight(0);
                 return 1;
             }}
-
-            /* {self.name.upper()}_THRESHOLD Only to avoid numerical problems due to raising 0
-             * to a fractional power. */
-            static const real {self.name.upper()}_THRESHOLD = 1e-20;
             """
         )
+        if self.threshold:
+            retstr += textwrap.dedent(
+                f"""
+                /* {self.name.upper()}_THRESHOLD Only to avoid numerical problems due to raising 0
+                 * to a fractional power. */
+                static const real {self.name.upper()}_THRESHOLD = {self.threshold};
+                """
+            )
+        return retstr

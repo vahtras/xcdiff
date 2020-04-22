@@ -5,7 +5,7 @@ from sympy import Symbol, ccode
 from .func import Functional
 
 
-class GGAXFunctional(Functional):
+class GeneralFunctional(Functional):
 
     def __init__(
             self, name: str, ra: Symbol, rb: Symbol, ga: Symbol, gb: Symbol,

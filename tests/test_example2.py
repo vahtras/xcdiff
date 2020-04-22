@@ -2,7 +2,7 @@ import sympy
 
 import pytest
 
-from xcd import ExampleFunctional, GGAFunctional, GGAXFunctional
+from xcdiff import ExampleFunctional, GGAFunctional, GeneralFunctional
 
 
 pi = sympy.pi
@@ -20,6 +20,7 @@ def example2():
         ra * ga * ga,
         rb * gb * gb,
         const="static const real EPREF= -5e-5;",
+        threshold=1e-20,
     )
     return func
 
@@ -33,7 +34,7 @@ def gga2():
 @pytest.fixture
 def gga2x():
     ra, rb, ga, gb, gab = sympy.symbols("dp->rhoa, dp->rhob, dp->grada, dp->gradb, dp->gradab")
-    func = GGAXFunctional("Example2x", ra, rb, ga, gb, gab, ra*rb*(ga*ga + gb*gb + 2*gab))
+    func = GeneralFunctional("Example2x", ra, rb, ga, gb, gab, ra*rb*(ga*ga + gb*gb + 2*gab))
     return func
 
 @pytest.mark.skip

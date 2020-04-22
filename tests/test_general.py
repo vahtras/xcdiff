@@ -1,6 +1,6 @@
 import pytest
 
-from xcd.ggax import comment_zero_lines, GGAXFunctional
+from xcdiff.general import comment_zero_lines, GeneralFunctional
 
 
 @pytest.mark.parametrize(

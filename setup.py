@@ -1,6 +1,6 @@
 from setuptools import setup
 
 setup(
-    name='xcd',
-    packages=['xcd'],
+    name='xcdiff',
+    packages=['xcdiff'],
 )

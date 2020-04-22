@@ -2,7 +2,7 @@ import sympy
 
 import pytest
 
-from xcd import Functional
+from xcdiff import Functional
 
 
 pi = sympy.pi
@@ -13,7 +13,10 @@ def slater():
     ra, rb = sympy.symbols("dp->rhoa, dp->rhob")
     # defs = "const real PREF= -3.0/4.0*pow(6/M_PI, 1.0/3.0);"
     PREF = -3 / 4 * (6 / pi) ** (1 / 3)
-    func = Functional("Slater", ra, rb, PREF * (ra ** (4 / 3)), PREF * (rb ** (4 / 3)),)
+    func = Functional(
+        "Slater", ra, rb, PREF * (ra ** (4 / 3)), PREF * (rb ** (4 / 3)),
+        threshold=1e-20,
+    )
     return func
 
 
@@ -26,7 +29,7 @@ def test_header(slater):
 
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) 2018 by the authors of Dalton.
+!  Copyright (C) 2020 by the authors of Dalton.
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public

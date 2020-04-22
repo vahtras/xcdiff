@@ -2,7 +2,7 @@ import sympy
 
 import pytest
 
-from xcd import ExampleFunctional
+from xcdiff import ExampleFunctional
 
 
 pi = sympy.pi
@@ -20,6 +20,7 @@ def example3():
         pow(ga, 1.7),
         pow(gb, 1.7),
         const="static const real EPREF= -5e-2;",
+        threshold=1e-20,
     )
     return func
 
