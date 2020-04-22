@@ -21,6 +21,7 @@ def example2():
         rb * gb * gb,
         const="static const real EPREF= -5e-5;",
         threshold=1e-20,
+        info='Other info here'
     )
     return func
 
@@ -37,17 +38,15 @@ def gga2x():
     func = GeneralFunctional("Example2x", ra, rb, ga, gb, gab, ra*rb*(ga*ga + gb*gb + 2*gab))
     return func
 
-@pytest.mark.skip
+
 def test_header(example2):
     assert (
         example2.header()
         == """
 /*
-
-
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) 2018 by the authors of Dalton.
+!  Copyright (C) 2020 by the authors of Dalton.
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -61,16 +60,18 @@ def test_header(example2):
 !  If a copy of the GNU LGPL v2.1 was not distributed with this
 !  code, you can obtain one at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html.
 !
-
-!  
+!
 */
 /*-*-mode: C; c-indentation-style: "bsd"; c-basic-offset: 4; -*-*/
-/* fun-example.c:
-   implementation of a test GGA-class functional
+/* fun-example2.c:
+   implementation of Example2 functional and its derivatives
    (c) Pawel Salek, pawsa@theochem.kth.se, aug 2001
+   Z. Rinkevicius adapted for open shell systems: energy, first derivatives.
    NOTE:
    this file may seem unnecessarily complex but the structure really pays off
    when implementing multiple functionals depending on different parameters.
+
+   Other info here
 */
 
 #include <math.h>

@@ -16,6 +16,7 @@ class BaseFunctional:
         self.Fb = Fb
         self.const = kwargs.get('const', '')
         self.threshold = kwargs.get('threshold')
+        self.info = kwargs.get('info', '') 
         self.gga = 0
 
     def __str__(self):
@@ -34,8 +35,6 @@ class BaseFunctional:
         return textwrap.dedent(
             f"""
             /*
-
-
             !
             !  Dalton, a molecular electronic structure program
             !  Copyright (C) 2020 by the authors of Dalton.
@@ -52,27 +51,20 @@ class BaseFunctional:
             !  If a copy of the GNU LGPL v2.1 was not distributed with this
             !  code, you can obtain one at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html.
             !
-
             !
-
             */
             /*-*-mode: C; c-indentation-style: "bsd"; c-basic-offset: 4; -*-*/
             /* fun-{self.name}.c:
                implementation of {self.name_orig} functional and its derivatives
-               (c), Pawel Salek, pawsa@theochem.kth.se, aug 2001
+               (c) Pawel Salek, pawsa@theochem.kth.se, aug 2001
                Z. Rinkevicius adapted for open shell systems: energy, first derivatives.
                NOTE:
                this file may seem unnecessarily complex but the structure really pays off
                when implementing multiple functionals depending on different parameters.
+
+               {self.info}
             */
 
-            /* strictly conform to XOPEN ANSI C standard */
-            #if !defined(SYS_DEC)
-            /* XOPEN compliance is missing on old Tru64 4.0E Alphas and pow() prototype
-             * is not specified. */
-            #define _XOPEN_SOURCE          500
-            #define _XOPEN_SOURCE_EXTENDED 1
-            #endif
             #include <math.h>
             #include <stdio.h>
             #include "general.h"
