@@ -1,11 +1,7 @@
+import pytest
 import sympy
 
-import pytest
-
 from xcdiff import ExampleFunctional
-
-
-pi = sympy.pi
 
 
 @pytest.fixture
