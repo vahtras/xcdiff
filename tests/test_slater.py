@@ -58,6 +58,8 @@ def test_header(slater):
    this file may seem unnecessarily complex but the structure really pays off
    when implementing multiple functionals depending on different parameters.
 
+   Derivatives in this file generated with SymPy using xcdiff by Olav Vahtras
+
 
     Functional(
         "Slater", ra, rb, PREF * (ra ** (4 / 3)), PREF * (rb ** (4 / 3)),

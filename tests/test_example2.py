@@ -55,6 +55,8 @@ def test_header(example2):
    this file may seem unnecessarily complex but the structure really pays off
    when implementing multiple functionals depending on different parameters.
 
+   Derivatives in this file generated with SymPy using xcdiff by Olav Vahtras
+
    Other info here
 */
 
