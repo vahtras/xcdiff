@@ -32,47 +32,47 @@ class BaseFunctional:
         )
 
     def header(self):
-        return textwrap.dedent(
-            f"""
-            /*
-            !
-            !  Dalton, a molecular electronic structure program
-            !  Copyright (C) 2020 by the authors of Dalton.
-            !
-            !  This program is free software; you can redistribute it and/or
-            !  modify it under the terms of the GNU Lesser General Public
-            !  License version 2.1 as published by the Free Software Foundation.
-            !
-            !  This program is distributed in the hope that it will be useful,
-            !  but WITHOUT ANY WARRANTY; without even the implied warranty of
-            !  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-            !  Lesser General Public License for more details.
-            !
-            !  If a copy of the GNU LGPL v2.1 was not distributed with this
-            !  code, you can obtain one at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html.
-            !
-            !
-            */
-            /*-*-mode: C; c-indentation-style: "bsd"; c-basic-offset: 4; -*-*/
-            /* fun-{self.name}.c:
-               implementation of {self.name_orig} functional and its derivatives
-               (c) Pawel Salek, pawsa@theochem.kth.se, aug 2001
-               Z. Rinkevicius adapted for open shell systems: energy, first derivatives.
-               NOTE:
-               this file may seem unnecessarily complex but the structure really pays off
-               when implementing multiple functionals depending on different parameters.
+        return (
+f"""
+/*
+!
+!  Dalton, a molecular electronic structure program
+!  Copyright (C) 2020 by the authors of Dalton.
+!
+!  This program is free software; you can redistribute it and/or
+!  modify it under the terms of the GNU Lesser General Public
+!  License version 2.1 as published by the Free Software Foundation.
+!
+!  This program is distributed in the hope that it will be useful,
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+!  Lesser General Public License for more details.
+!
+!  If a copy of the GNU LGPL v2.1 was not distributed with this
+!  code, you can obtain one at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html.
+!
+!
+*/
+/*-*-mode: C; c-indentation-style: "bsd"; c-basic-offset: 4; -*-*/
+/* fun-{self.name}.c:
+   implementation of {self.name_orig} functional and its derivatives
+   (c) Pawel Salek, pawsa@theochem.kth.se, aug 2001
+   Z. Rinkevicius adapted for open shell systems: energy, first derivatives.
+   NOTE:
+   this file may seem unnecessarily complex but the structure really pays off
+   when implementing multiple functionals depending on different parameters.
 
-               {self.info}
-            */
+{self.info}
+*/
 
-            #include <math.h>
-            #include <stdio.h>
-            #include "general.h"
+#include <math.h>
+#include <stdio.h>
+#include "general.h"
 
-            #define __CVERSION__
+#define __CVERSION__
 
-            #include "functionals.h"
-            """
+#include "functionals.h"
+"""
         )
 
     def interface(self):

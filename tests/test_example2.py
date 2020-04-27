@@ -18,7 +18,7 @@ def example2():
         rb * gb * gb,
         const="static const real EPREF= -5e-5;",
         threshold=1e-20,
-        info='Other info here'
+        info='   Other info here'
     )
     return func
 
