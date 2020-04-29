@@ -1,5 +1,6 @@
 import textwrap
 import functools
+import concurrent.futures
 
 from sympy import Symbol, ccode
 
@@ -50,13 +51,18 @@ class GeneralFunctional(Functional):
     @timeme
     @functools.lru_cache(None)
     def grad(self):
-        a, b, α, β, γ = self.ra, self.rb, self.ga, self.gb, self.gab
-        Fa = self.F.diff(a)
-        Fb = self.F.diff(b)
-        Fα = self.F.diff(α)
-        Fβ = self.F.diff(β)
-        Fγ = self.F.diff(γ)
-        return (Fa, Fb, Fα, Fβ, Fγ)
+        # a, b, α, β, γ = self.args
+        # Fa = self.F.diff(a)
+        # Fb = self.F.diff(b)
+        # Fα = self.F.diff(α)
+        # Fβ = self.F.diff(β)
+        # Fγ = self.F.diff(γ)
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            # results = executor.map(self.F.diff, (a, b, α, β, γ))
+            futures = [executor.submit(self.F.diff, x) for x in self.args]
+            results = (future.result() for future in futures)
+
+        return tuple(results)
 
     @timeme
     def second_derivatives(self):
