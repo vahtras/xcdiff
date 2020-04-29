@@ -38,13 +38,15 @@ class GeneralFunctional(Functional):
         return code
 
     def first_derivatives(self):
-        Fa, Fb, Fα, Fβ, Fγ = self.grad()
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            results = executor.map(ccode, self.grad())
+        Fa, Fb, Fα, Fβ, Fγ = results
         code = f"""
-  ds->df1000 += ({ccode(Fa)})*factor;
-  ds->df0100 += ({ccode(Fb)})*factor;
-  ds->df0010 += ({ccode(Fα)})*factor;
-  ds->df0001 += ({ccode(Fβ)})*factor;
-  ds->df00001 += ({ccode(Fγ)})*factor;
+  ds->df1000 += ({Fa})*factor;
+  ds->df0100 += ({Fb})*factor;
+  ds->df0010 += ({Fα})*factor;
+  ds->df0001 += ({Fβ})*factor;
+  ds->df00001 += ({Fγ})*factor;
 """
         return code
 
@@ -58,26 +60,31 @@ class GeneralFunctional(Functional):
         return tuple(results)
 
     @timeme
+    @functools.lru_cache(None)
     def second_derivatives(self):
+
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            results = executor.map(ccode, self.hess())
+
         Faa, Fab, Faα, Faβ, Faγ,\
-            Fbb, Fbα, Fbβ, Fbγ, Fαα, Fαβ, Fαγ, Fββ, Fβγ, Fγγ = self.hess()
+            Fbb, Fbα, Fbβ, Fbγ, Fαα, Fαβ, Fαγ, Fββ, Fβγ, Fγγ = results
 
         code = f"""
-  ds->df2000 += ({ccode(Faa)})*factor;
-  ds->df1100 += ({ccode(Fab)})*factor;
-  ds->df1010 += ({ccode(Faα)})*factor;
-  ds->df1001 += ({ccode(Faβ)})*factor;
-  ds->df10001 += ({ccode(Faγ)})*factor;
-  ds->df0200 += ({ccode(Fbb)})*factor;
-  ds->df0110 += ({ccode(Fbα)})*factor;
-  ds->df0101 += ({ccode(Fbβ)})*factor;
-  ds->df01001 += ({ccode(Fbγ)})*factor;
-  ds->df0020 += ({ccode(Fαα)})*factor;
-  ds->df0011 += ({ccode(Fαβ)})*factor;
-  ds->df00101 += ({ccode(Fαγ)})*factor;
-  ds->df0002 += ({ccode(Fββ)})*factor;
-  ds->df00011 += ({ccode(Fβγ)})*factor;
-  ds->df00002 += ({ccode(Fγγ)})*factor;
+  ds->df2000 += ({Faa})*factor;
+  ds->df1100 += ({Fab})*factor;
+  ds->df1010 += ({Faα})*factor;
+  ds->df1001 += ({Faβ})*factor;
+  ds->df10001 += ({Faγ})*factor;
+  ds->df0200 += ({Fbb})*factor;
+  ds->df0110 += ({Fbα})*factor;
+  ds->df0101 += ({Fbβ})*factor;
+  ds->df01001 += ({Fbγ})*factor;
+  ds->df0020 += ({Fαα})*factor;
+  ds->df0011 += ({Fαβ})*factor;
+  ds->df00101 += ({Fαγ})*factor;
+  ds->df0002 += ({Fββ})*factor;
+  ds->df00011 += ({Fβγ})*factor;
+  ds->df00002 += ({Fγγ})*factor;
 """
         return code
 
@@ -116,7 +123,10 @@ class GeneralFunctional(Functional):
         return tuple(results)
 
     @timeme
+    @functools.lru_cache(None)
     def third_derivatives(self):
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            results = executor.map(ccode, self.kolm())
         (
             Faaa, Faab, Faaα, Faaβ, Faaγ, Fabb,
             Fabα, Fabβ, Fabγ, Faαα, Faαβ, Faαγ,
@@ -124,44 +134,44 @@ class GeneralFunctional(Functional):
             Fbbγ, Fbαα, Fbαβ, Fbαγ, Fbββ, Fbβγ,
             Fbγγ, Fααα, Fααβ, Fααγ, Fαββ, Fαβγ,
             Fαγγ, Fβββ, Fββγ, Fβγγ, Fγγγ
-        ) = self.kolm()
+        ) = results
 
         code = f"""
-  ds->df3000 += ({ccode(Faaa)})*factor;
-  ds->df2100 += ({ccode(Faab)})*factor;
-  ds->df2010 += ({ccode(Faaα)})*factor;
-  ds->df2001 += ({ccode(Faaβ)})*factor;
-  ds->df20001 += ({ccode(Faaγ)})*factor;
-  ds->df1200 += ({ccode(Fabb)})*factor;
-  ds->df1110 += ({ccode(Fabα)})*factor;
-  ds->df1101 += ({ccode(Fabβ)})*factor;
-  ds->df11001 += ({ccode(Fabγ)})*factor;
-  ds->df1020 += ({ccode(Faαα)})*factor;
-  ds->df1011 += ({ccode(Faαβ)})*factor;
-  ds->df10101 += ({ccode(Faαγ)})*factor;
-  ds->df1002 += ({ccode(Faββ)})*factor;
-  ds->df10011 += ({ccode(Faβγ)})*factor;
-  ds->df10002 += ({ccode(Faγγ)})*factor;
-  ds->df0300 += ({ccode(Fbbb)})*factor;
-  ds->df0210 += ({ccode(Fbbα)})*factor;
-  ds->df0201 += ({ccode(Fbbβ)})*factor;
-  ds->df02001 += ({ccode(Fbbγ)})*factor;
-  ds->df0120 += ({ccode(Fbαα)})*factor;
-  ds->df0111 += ({ccode(Fbαβ)})*factor;
-  ds->df01101 += ({ccode(Fbαγ)})*factor;
-  ds->df0102 += ({ccode(Fbββ)})*factor;
-  ds->df01011 += ({ccode(Fbβγ)})*factor;
-  ds->df01002 += ({ccode(Fbγγ)})*factor;
-  ds->df0030 += ({ccode(Fααα)})*factor;
-  ds->df0021 += ({ccode(Fααβ)})*factor;
-  ds->df00201 += ({ccode(Fααγ)})*factor;
-  ds->df0012 += ({ccode(Fαββ)})*factor;
-  ds->df00111 += ({ccode(Fαβγ)})*factor;
-  ds->df00102 += ({ccode(Fαγγ)})*factor;
-  ds->df0003 += ({ccode(Fβββ)})*factor;
-  ds->df00021 += ({ccode(Fββγ)})*factor;
-  ds->df00012 += ({ccode(Fβγγ)})*factor;
-  ds->df00003 += ({ccode(Fγγγ)})*factor;
+  ds->df3000 += ({Faaa})*factor;
+  ds->df2100 += ({Faab})*factor;
+  ds->df2010 += ({Faaα})*factor;
+  ds->df2001 += ({Faaβ})*factor;
+  ds->df20001 += ({Faaγ})*factor;
+  ds->df1200 += ({Fabb})*factor;
+  ds->df1110 += ({Fabα})*factor;
+  ds->df1101 += ({Fabβ})*factor;
+  ds->df11001 += ({Fabγ})*factor;
+  ds->df1020 += ({Faαα})*factor;
+  ds->df1011 += ({Faαβ})*factor;
+  ds->df10101 += ({Faαγ})*factor;
+  ds->df1002 += ({Faββ})*factor;
+  ds->df10011 += ({Faβγ})*factor;
+  ds->df10002 += ({Faγγ})*factor;
+  ds->df0300 += ({Fbbb})*factor;
+  ds->df0210 += ({Fbbα})*factor;
+  ds->df0201 += ({Fbbβ})*factor;
+  ds->df02001 += ({Fbbγ})*factor;
+  ds->df0120 += ({Fbαα})*factor;
+  ds->df0111 += ({Fbαβ})*factor;
+  ds->df01101 += ({Fbαγ})*factor;
+  ds->df0102 += ({Fbββ})*factor;
+  ds->df01011 += ({Fbβγ})*factor;
+  ds->df01002 += ({Fbγγ})*factor;
+  ds->df0030 += ({Fααα})*factor;
+  ds->df0021 += ({Fααβ})*factor;
+  ds->df00201 += ({Fααγ})*factor;
+  ds->df0012 += ({Fαββ})*factor;
+  ds->df00111 += ({Fαβγ})*factor;
+  ds->df00102 += ({Fαγγ})*factor;
+  ds->df0003 += ({Fβββ})*factor;
+  ds->df00021 += ({Fββγ})*factor;
+  ds->df00012 += ({Fβγγ})*factor;
+  ds->df00003 += ({Fγγγ})*factor;
 """
         return code
 
@@ -279,7 +289,10 @@ class GeneralFunctional(Functional):
         """
 
     @timeme
+    @functools.lru_cache(None)
     def fourth_derivatives(self):
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            results = executor.map(ccode, self.neli())
         (
             Faaaa,
             Faaab,
@@ -351,79 +364,79 @@ class GeneralFunctional(Functional):
             Fββγγ,
             Fβγγγ,
             Fγγγγ,
-        ) = self.neli()
+        ) = results
 
         code = f"""
-  ds->df4000 += ({ccode(Faaaa)})*factor;
-  ds->df3100 += ({ccode(Faaab)})*factor;
-  ds->df3010 += ({ccode(Faaaα)})*factor;
-  ds->df3001 += ({ccode(Faaaβ)})*factor;
-  ds->df30001 += ({ccode(Faaaγ)})*factor;
-  ds->df2200 += ({ccode(Faabb)})*factor;
-  ds->df2110 += ({ccode(Faabα)})*factor;
-  ds->df2101 += ({ccode(Faabβ)})*factor;
-  ds->df21001 += ({ccode(Faabγ)})*factor;
-  ds->df2020 += ({ccode(Faaαα)})*factor;
-  ds->df2011 += ({ccode(Faaαβ)})*factor;
-  ds->df20101 += ({ccode(Faaαγ)})*factor;
-  ds->df2002 += ({ccode(Faaββ)})*factor;
-  ds->df20011 += ({ccode(Faaβγ)})*factor;
-  ds->df20002 += ({ccode(Faaγγ)})*factor;
-  ds->df1300 += ({ccode(Fabbb)})*factor;
-  ds->df1210 += ({ccode(Fabbα)})*factor;
-  ds->df1201 += ({ccode(Fabbβ)})*factor;
-  ds->df12001 += ({ccode(Fabbγ)})*factor;
-  ds->df1120 += ({ccode(Fabαα)})*factor;
-  ds->df1111 += ({ccode(Fabαβ)})*factor;
-  ds->df11101 += ({ccode(Fabαγ)})*factor;
-  ds->df1102 += ({ccode(Fabββ)})*factor;
-  ds->df11011 += ({ccode(Fabβγ)})*factor;
-  ds->df11002 += ({ccode(Fabγγ)})*factor;
-  ds->df1030 += ({ccode(Faααα)})*factor;
-  ds->df1021 += ({ccode(Faααβ)})*factor;
-  ds->df10201 += ({ccode(Faααγ)})*factor;
-  ds->df1012 += ({ccode(Faαββ)})*factor;
-  ds->df10111 += ({ccode(Faαβγ)})*factor;
-  ds->df10102 += ({ccode(Faαγγ)})*factor;
-  ds->df1003 += ({ccode(Faβββ)})*factor;
-  ds->df10021 += ({ccode(Faββγ)})*factor;
-  ds->df10012 += ({ccode(Faβγγ)})*factor;
-  ds->df10003 += ({ccode(Faγγγ)})*factor;
-  ds->df0400 += ({ccode(Fbbbb)})*factor;
-  ds->df0310 += ({ccode(Fbbbα)})*factor;
-  ds->df0301 += ({ccode(Fbbbβ)})*factor;
-  ds->df03001 += ({ccode(Fbbbγ)})*factor;
-  ds->df0220 += ({ccode(Fbbαα)})*factor;
-  ds->df0211 += ({ccode(Fbbαβ)})*factor;
-  ds->df02101 += ({ccode(Fbbαγ)})*factor;
-  ds->df0202 += ({ccode(Fbbββ)})*factor;
-  ds->df02011 += ({ccode(Fbbβγ)})*factor;
-  ds->df02002 += ({ccode(Fbbγγ)})*factor;
-  ds->df0130 += ({ccode(Fbααα)})*factor;
-  ds->df0121 += ({ccode(Fbααβ)})*factor;
-  ds->df01201 += ({ccode(Fbααγ)})*factor;
-  ds->df0112 += ({ccode(Fbαββ)})*factor;
-  ds->df01111 += ({ccode(Fbαβγ)})*factor;
-  ds->df01102 += ({ccode(Fbαγγ)})*factor;
-  ds->df0103 += ({ccode(Fbβββ)})*factor;
-  ds->df01021 += ({ccode(Fbββγ)})*factor;
-  ds->df01012 += ({ccode(Fbβγγ)})*factor;
-  ds->df01003 += ({ccode(Fbγγγ)})*factor;
-  ds->df0040 += ({ccode(Fαααα)})*factor;
-  ds->df0031 += ({ccode(Fαααβ)})*factor;
-  ds->df00301 += ({ccode(Fαααγ)})*factor;
-  ds->df0022 += ({ccode(Fααββ)})*factor;
-  ds->df00211 += ({ccode(Fααβγ)})*factor;
-  ds->df00202 += ({ccode(Fααγγ)})*factor;
-  ds->df0013 += ({ccode(Fαβββ)})*factor;
-  ds->df00121 += ({ccode(Fαββγ)})*factor;
-  ds->df00112 += ({ccode(Fαβγγ)})*factor;
-  ds->df00103 += ({ccode(Fαγγγ)})*factor;
-  ds->df0004 += ({ccode(Fββββ)})*factor;
-  ds->df00031 += ({ccode(Fβββγ)})*factor;
-  ds->df00022 += ({ccode(Fββγγ)})*factor;
-  ds->df00013 += ({ccode(Fβγγγ)})*factor;
-  ds->df00004 += ({ccode(Fγγγγ)})*factor;
+  ds->df4000 += ({Faaaa})*factor;
+  ds->df3100 += ({Faaab})*factor;
+  ds->df3010 += ({Faaaα})*factor;
+  ds->df3001 += ({Faaaβ})*factor;
+  ds->df30001 += ({Faaaγ})*factor;
+  ds->df2200 += ({Faabb})*factor;
+  ds->df2110 += ({Faabα})*factor;
+  ds->df2101 += ({Faabβ})*factor;
+  ds->df21001 += ({Faabγ})*factor;
+  ds->df2020 += ({Faaαα})*factor;
+  ds->df2011 += ({Faaαβ})*factor;
+  ds->df20101 += ({Faaαγ})*factor;
+  ds->df2002 += ({Faaββ})*factor;
+  ds->df20011 += ({Faaβγ})*factor;
+  ds->df20002 += ({Faaγγ})*factor;
+  ds->df1300 += ({Fabbb})*factor;
+  ds->df1210 += ({Fabbα})*factor;
+  ds->df1201 += ({Fabbβ})*factor;
+  ds->df12001 += ({Fabbγ})*factor;
+  ds->df1120 += ({Fabαα})*factor;
+  ds->df1111 += ({Fabαβ})*factor;
+  ds->df11101 += ({Fabαγ})*factor;
+  ds->df1102 += ({Fabββ})*factor;
+  ds->df11011 += ({Fabβγ})*factor;
+  ds->df11002 += ({Fabγγ})*factor;
+  ds->df1030 += ({Faααα})*factor;
+  ds->df1021 += ({Faααβ})*factor;
+  ds->df10201 += ({Faααγ})*factor;
+  ds->df1012 += ({Faαββ})*factor;
+  ds->df10111 += ({Faαβγ})*factor;
+  ds->df10102 += ({Faαγγ})*factor;
+  ds->df1003 += ({Faβββ})*factor;
+  ds->df10021 += ({Faββγ})*factor;
+  ds->df10012 += ({Faβγγ})*factor;
+  ds->df10003 += ({Faγγγ})*factor;
+  ds->df0400 += ({Fbbbb})*factor;
+  ds->df0310 += ({Fbbbα})*factor;
+  ds->df0301 += ({Fbbbβ})*factor;
+  ds->df03001 += ({Fbbbγ})*factor;
+  ds->df0220 += ({Fbbαα})*factor;
+  ds->df0211 += ({Fbbαβ})*factor;
+  ds->df02101 += ({Fbbαγ})*factor;
+  ds->df0202 += ({Fbbββ})*factor;
+  ds->df02011 += ({Fbbβγ})*factor;
+  ds->df02002 += ({Fbbγγ})*factor;
+  ds->df0130 += ({Fbααα})*factor;
+  ds->df0121 += ({Fbααβ})*factor;
+  ds->df01201 += ({Fbααγ})*factor;
+  ds->df0112 += ({Fbαββ})*factor;
+  ds->df01111 += ({Fbαβγ})*factor;
+  ds->df01102 += ({Fbαγγ})*factor;
+  ds->df0103 += ({Fbβββ})*factor;
+  ds->df01021 += ({Fbββγ})*factor;
+  ds->df01012 += ({Fbβγγ})*factor;
+  ds->df01003 += ({Fbγγγ})*factor;
+  ds->df0040 += ({Fαααα})*factor;
+  ds->df0031 += ({Fαααβ})*factor;
+  ds->df00301 += ({Fαααγ})*factor;
+  ds->df0022 += ({Fααββ})*factor;
+  ds->df00211 += ({Fααβγ})*factor;
+  ds->df00202 += ({Fααγγ})*factor;
+  ds->df0013 += ({Fαβββ})*factor;
+  ds->df00121 += ({Fαββγ})*factor;
+  ds->df00112 += ({Fαβγγ})*factor;
+  ds->df00103 += ({Fαγγγ})*factor;
+  ds->df0004 += ({Fββββ})*factor;
+  ds->df00031 += ({Fβββγ})*factor;
+  ds->df00022 += ({Fββγγ})*factor;
+  ds->df00013 += ({Fβγγγ})*factor;
+  ds->df00004 += ({Fγγγγ})*factor;
 """
         return code
 
@@ -548,7 +561,7 @@ class GeneralFunctional(Functional):
                 [executor.submit(Fβγγ.diff, x) for x in self.args[4:]] + \
                 [executor.submit(Fγγγ.diff, x) for x in self.args[4:]]
 
-            results = (future.result() for future in futures)
+            results = [future.result() for future in futures]
 
         return results
 
@@ -628,6 +641,7 @@ class GeneralFunctional(Functional):
     """
 
     @timeme
+    @functools.lru_cache(None)
     def gradient(self):
         code = f"""
 static void
@@ -638,6 +652,7 @@ static void
         return code
 
     @timeme
+    @functools.lru_cache(None)
     def hessian(self):
         code = f"""
 static void
@@ -649,6 +664,7 @@ static void
         return code
 
     @timeme
+    @functools.lru_cache(None)
     def third(self):
         code = f"""
 static void
@@ -659,6 +675,7 @@ static void
         return code
 
     @timeme
+    @functools.lru_cache(None)
     def fourth(self):
         code = f"""
 static void
