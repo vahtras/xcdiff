@@ -51,14 +51,7 @@ class GeneralFunctional(Functional):
     @timeme
     @functools.lru_cache(None)
     def grad(self):
-        # a, b, α, β, γ = self.args
-        # Fa = self.F.diff(a)
-        # Fb = self.F.diff(b)
-        # Fα = self.F.diff(α)
-        # Fβ = self.F.diff(β)
-        # Fγ = self.F.diff(γ)
         with concurrent.futures.ProcessPoolExecutor() as executor:
-            # results = executor.map(self.F.diff, (a, b, α, β, γ))
             futures = [executor.submit(self.F.diff, x) for x in self.args]
             results = (future.result() for future in futures)
 
@@ -92,7 +85,8 @@ class GeneralFunctional(Functional):
     @functools.lru_cache(None)
     def hess(self):
         Fa, Fb, Fα, Fβ, Fγ = self.grad()
-        a, b, α, β, γ = self.ra, self.rb, self.ga, self.gb, self.gab
+        a, b, α, β, γ = self.args
+        """
         Faa = Fa.diff(a)
         Fab = Fa.diff(b)
         Faα = Fa.diff(α)
@@ -108,14 +102,18 @@ class GeneralFunctional(Functional):
         Fββ = Fβ.diff(β)
         Fβγ = Fβ.diff(γ)
         Fγγ = Fγ.diff(γ)
+        """
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            futures = \
+                [executor.submit(Fa.diff, x) for x in self.args] + \
+                [executor.submit(Fb.diff, x) for x in self.args[1:]] + \
+                [executor.submit(Fα.diff, x) for x in self.args[2:]] + \
+                [executor.submit(Fβ.diff, x) for x in self.args[3:]] + \
+                [executor.submit(Fγ.diff, x) for x in self.args[4:]]
 
-        return (
-            Faa, Fab, Faα, Faβ, Faγ,
-            Fbb, Fbα, Fbβ, Fbγ,
-            Fαα, Fαβ, Fαγ,
-            Fββ, Fβγ,
-            Fγγ,
-        )
+            results = (future.result() for future in futures)
+
+        return tuple(results)
 
     @timeme
     def third_derivatives(self):
@@ -181,6 +179,7 @@ class GeneralFunctional(Functional):
         ) = self.hess()
 
         a, b, α, β, γ = self.ra, self.rb, self.ga, self.gb, self.gab
+        """
         Faaa = Faa.diff(a)
         Faab = Faa.diff(b)
         Faaα = Faa.diff(α)
@@ -216,7 +215,30 @@ class GeneralFunctional(Functional):
         Fββγ = Fββ.diff(γ)
         Fβγγ = Fβγ.diff(γ)
         Fγγγ = Fγγ.diff(γ)
+        """
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            futures = \
+                [executor.submit(Faa.diff, x) for x in self.args] + \
+                [executor.submit(Fab.diff, x) for x in self.args[1:]] + \
+                [executor.submit(Faα.diff, x) for x in self.args[2:]] + \
+                [executor.submit(Faβ.diff, x) for x in self.args[3:]] + \
+                [executor.submit(Faγ.diff, x) for x in self.args[4:]] + \
+                [executor.submit(Fbb.diff, x) for x in self.args[1:]] + \
+                [executor.submit(Fbα.diff, x) for x in self.args[2:]] + \
+                [executor.submit(Fbβ.diff, x) for x in self.args[3:]] + \
+                [executor.submit(Fbγ.diff, x) for x in self.args[4:]] + \
+                [executor.submit(Fαα.diff, x) for x in self.args[2:]] + \
+                [executor.submit(Fαβ.diff, x) for x in self.args[3:]] + \
+                [executor.submit(Fαγ.diff, x) for x in self.args[4:]] + \
+                [executor.submit(Fββ.diff, x) for x in self.args[3:]] + \
+                [executor.submit(Fβγ.diff, x) for x in self.args[4:]] + \
+                [executor.submit(Fγγ.diff, x) for x in self.args[4:]]
 
+            results = (future.result() for future in futures)
+
+        return tuple(results)
+
+        """
         return (
             Faaa,
             Faab,
@@ -254,6 +276,7 @@ class GeneralFunctional(Functional):
             Fβγγ,
             Fγγγ,
         )
+        """
 
     @timeme
     def fourth_derivatives(self):
@@ -414,6 +437,7 @@ class GeneralFunctional(Functional):
         ) = self.kolm()
 
         a, b, α, β, γ = self.ra, self.rb, self.ga, self.gb, self.gab
+        """
         Faaaa = Faaa.diff(a)
         Faaab = Faaa.diff(b)
         Faaaα = Faaa.diff(α)
@@ -484,7 +508,51 @@ class GeneralFunctional(Functional):
         Fββγγ = Fββγ.diff(γ)
         Fβγγγ = Fβγγ.diff(γ)
         Fγγγγ = Fγγγ.diff(γ)
+        """
 
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            futures = \
+                [executor.submit(Faaa.diff, x) for x in self.args] + \
+                [executor.submit(Faab.diff, x) for x in self.args[1:]] + \
+                [executor.submit(Faaα.diff, x) for x in self.args[2:]] + \
+                [executor.submit(Faaβ.diff, x) for x in self.args[3:]] + \
+                [executor.submit(Faaγ.diff, x) for x in self.args[4:]] + \
+                [executor.submit(Fabb.diff, x) for x in self.args[1:]] + \
+                [executor.submit(Fabα.diff, x) for x in self.args[2:]] + \
+                [executor.submit(Fabβ.diff, x) for x in self.args[3:]] + \
+                [executor.submit(Fabγ.diff, x) for x in self.args[4:]] + \
+                [executor.submit(Faαα.diff, x) for x in self.args[2:]] + \
+                [executor.submit(Faαβ.diff, x) for x in self.args[3:]] + \
+                [executor.submit(Faαγ.diff, x) for x in self.args[4:]] + \
+                [executor.submit(Faββ.diff, x) for x in self.args[3:]] + \
+                [executor.submit(Faβγ.diff, x) for x in self.args[4:]] + \
+                [executor.submit(Faγγ.diff, x) for x in self.args[4:]] + \
+                [executor.submit(Fbbb.diff, x) for x in self.args[1:]] + \
+                [executor.submit(Fbbα.diff, x) for x in self.args[2:]] + \
+                [executor.submit(Fbbβ.diff, x) for x in self.args[3:]] + \
+                [executor.submit(Fbbγ.diff, x) for x in self.args[4:]] + \
+                [executor.submit(Fbαα.diff, x) for x in self.args[2:]] + \
+                [executor.submit(Fbαβ.diff, x) for x in self.args[3:]] + \
+                [executor.submit(Fbαγ.diff, x) for x in self.args[4:]] + \
+                [executor.submit(Fbββ.diff, x) for x in self.args[3:]] + \
+                [executor.submit(Fbβγ.diff, x) for x in self.args[4:]] + \
+                [executor.submit(Fbγγ.diff, x) for x in self.args[4:]] + \
+                [executor.submit(Fααα.diff, x) for x in self.args[2:]] + \
+                [executor.submit(Fααβ.diff, x) for x in self.args[3:]] + \
+                [executor.submit(Fααγ.diff, x) for x in self.args[4:]] + \
+                [executor.submit(Fαββ.diff, x) for x in self.args[3:]] + \
+                [executor.submit(Fαβγ.diff, x) for x in self.args[4:]] + \
+                [executor.submit(Fαγγ.diff, x) for x in self.args[4:]] + \
+                [executor.submit(Fβββ.diff, x) for x in self.args[3:]] + \
+                [executor.submit(Fββγ.diff, x) for x in self.args[4:]] + \
+                [executor.submit(Fβγγ.diff, x) for x in self.args[4:]] + \
+                [executor.submit(Fγγγ.diff, x) for x in self.args[4:]]
+
+            results = (future.result() for future in futures)
+
+        return results
+
+        """
         return (
             Faaaa,
             Faaab,
@@ -557,6 +625,7 @@ class GeneralFunctional(Functional):
             Fβγγγ,
             Fγγγγ,
         )
+    """
 
     @timeme
     def gradient(self):
